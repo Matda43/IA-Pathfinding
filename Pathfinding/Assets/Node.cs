@@ -1,31 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Node
 {
-    public bool walkable;
-    public Vector3 worldPosition;
+    Vector3 position;
+    bool walkable;
+    float distance;
+    Node parent;
 
-    public int gridX;
-    public int gridY;
-
-    public Node parent;
-    public int dst;
-    private int dstMax = 10000;
-
-    public Node(bool walkable, Vector3 worldPosition, int gridX, int gridY)
+    public Node(Vector3 position, bool walkable)
     {
+        this.position = position;
         this.walkable = walkable;
-        this.worldPosition = worldPosition;
-        this.gridX = gridX;
-        this.gridY = gridY;
-        this.dst = dstMax;
     }
 
-    public void initDst()
+    public void setParent(Node parent)
     {
-        this.dst = this.dstMax;
-        this.parent = null;
+        this.parent = parent;
+    }
+
+    public Node getParent()
+    {
+        return parent;
+    }
+
+    public void setDistance(float new_distance)
+    {
+        this.distance = new_distance;
+    }
+
+    public void addDistance(float new_distance)
+    {
+        this.distance += new_distance;
+    }
+
+    public float getDistance()
+    {
+        return distance;
+    }
+
+    public void setWalkable(bool walkable)
+    {
+        this.walkable = walkable;
+    }
+
+    public bool isWalkable()
+    {
+        return this.walkable;
+    }
+
+    public Vector3 getPosition()
+    {
+        return this.position;
     }
 }
