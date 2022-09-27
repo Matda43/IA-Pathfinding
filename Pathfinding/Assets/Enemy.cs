@@ -8,23 +8,32 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
+    List<Vector3> spawnList;
     float moveSpeed;
 
     EnemyController controller;
-    Vector3 direction = new Vector3(0, 0, 0);
-    Vector3 spawn;
+    Vector3 direction;
 
     void Start()
     {
-        spawn = newSpawn();
-        moveSpeed = Mathf.RoundToInt(Random.Range(3, 5));
+        this.spawnList = new List<Vector3>();
+        this.direction = new Vector3(0, 0, 0);
+        moveSpeed = Mathf.RoundToInt(Random.Range(4, 5));
         controller = GetComponent<EnemyController>();
-        controller.transform.position = spawn;
     }
 
-    Vector3 newSpawn()
+    public void setPossibleSpawn(List<Vector3> spawnList)
     {
-        return new Vector3(Mathf.RoundToInt(Random.Range(5, 18)), 0.5f, Mathf.RoundToInt(Random.Range(1, 8)));
+        this.spawnList = spawnList;
+    }
+
+    public void newSpawn()
+    {
+        if (spawnList.Count > 0)
+        {
+            int r = Random.Range(0, spawnList.Count);
+            controller.transform.position = new Vector3(spawnList[r].x, spawnList[r].y + 1, spawnList[r].z);
+        }
     }
 
     void Update()
@@ -46,7 +55,7 @@ public class Enemy : MonoBehaviour
             var enemies = FindObjectsOfType<Enemy>();
             foreach (Enemy enemy in enemies)
             {
-                enemy.transform.position = newSpawn();
+                enemy.newSpawn();
             }
         }
     }

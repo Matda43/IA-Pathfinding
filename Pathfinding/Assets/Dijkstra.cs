@@ -19,6 +19,17 @@ public class Dijkstra : MonoBehaviour
         map = GetComponent<Map>();
     }
 
+    private void Start()
+    {
+        
+        List<Vector3> spawnList = map.getSpawnList();
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.setPossibleSpawn(spawnList);
+            enemy.newSpawn();
+        }
+    }
+
     private void Update()
     {
         Node node = map.NodeFromWorldPoint(player.transform.localPosition);

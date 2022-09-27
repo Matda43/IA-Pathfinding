@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(PlayerController))]
 public class Player : MonoBehaviour
 {
+    public TextMeshPro scoreText;
+
+    int score;
     float moveSpeed = 5;
 
     PlayerController controller;
@@ -18,6 +23,9 @@ public class Player : MonoBehaviour
 
         camera = Camera.main;
         camera.transform.Rotate(new Vector3(90, 0, 0));
+
+        score = 0;
+        scoreText.text = score.ToString();
     }
 
     void Update()
@@ -34,6 +42,14 @@ public class Player : MonoBehaviour
         if (collision.gameObject.GetComponent(typeof(Enemy)) as Enemy)
         {
             controller.transform.position = spawn;
+
+            score = 0;
+            scoreText.text = score.ToString();
+        }
+        else if (collision.gameObject.GetComponent(typeof(Piece)) as Piece)
+        {
+            score = (score + 1) % 10;
+            scoreText.text = score.ToString();
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Map : MonoBehaviour
 {
@@ -11,17 +12,41 @@ public class Map : MonoBehaviour
     public bool g;
     public bool o;
     public int width = 20;
-    public int height = 10;
+    public int height = 30;
+    public Piece piece;
 
     Dictionary<Vector3, Node> dictGround = new Dictionary<Vector3, Node>();
     Dictionary<Vector3, Obstacle> dictObstacles = new Dictionary<Vector3, Obstacle>();
     Dictionary<Enemy, List<Vector3>> paths = new Dictionary<Enemy, List<Vector3>>();
 
-    void Start()
+    List<Vector3> spawnList;
+
+    void Awake()
     {
         this.dictGround = generateDictGround();
         this.dictObstacles = generateDictObstacles(this.dictGround);
         generateMap(g, o);
+        this.spawnList = generateSpawnList();
+        this.piece.setPossibleSpawn(this.spawnList);
+        this.piece.newSpawn();
+    }
+
+    List<Vector3> generateSpawnList()
+    {
+        List<Vector3> possibleSpawn = new List<Vector3>();
+        foreach(var pair in dictGround)
+        {
+            if (pair.Value.isWalkable())
+            {
+                possibleSpawn.Add(pair.Key);
+            }
+        }
+        return possibleSpawn;
+    }
+
+    public List<Vector3> getSpawnList()
+    {
+        return this.spawnList;
     }
 
 
