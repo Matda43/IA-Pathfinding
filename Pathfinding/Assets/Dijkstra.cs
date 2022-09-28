@@ -21,13 +21,25 @@ public class Dijkstra : MonoBehaviour
 
     private void Start()
     {
-        
         List<Vector3> spawnList = map.getSpawnList();
+        List<Vector3> spawnListEnemy = new List<Vector3>();
+        List<Vector3> spawnListPlayer = new List<Vector3>();
+        foreach (Vector3 vector in spawnList){
+            if(vector.z > Mathf.RoundToInt(map.getHeight() / 2) || vector.x > Mathf.RoundToInt(map.getWidth() / 2))
+            {
+                spawnListEnemy.Add(vector);
+            }else
+            {
+                spawnListPlayer.Add(vector);
+            }
+        }
         foreach (Enemy enemy in enemies)
         {
-            enemy.setPossibleSpawn(spawnList);
+            enemy.setPossibleSpawn(spawnListEnemy);
             enemy.newSpawn();
         }
+        player.setPossibleSpawn(spawnListPlayer);
+        player.newSpawn();
     }
 
     private void Update()
@@ -101,10 +113,6 @@ public class Dijkstra : MonoBehaviour
                         }
                     }
                 }
-
-
-
-
 
                 if (i > security)
                 {

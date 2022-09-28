@@ -30,7 +30,6 @@ public class Piece : MonoBehaviour
         {
             int r = Random.Range(0, spawnList.Count);
             controller.transform.position = new Vector3(spawnList[r].x, spawnList[r].y + 1, spawnList[r].z);
-            
         }
     }
 

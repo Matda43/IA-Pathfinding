@@ -14,12 +14,14 @@ public class Player : MonoBehaviour
 
     PlayerController controller;
     new Camera camera;
-    Vector3 spawn = new Vector3(2, 0.5f, 2);
+    //Vector3 spawn = new Vector3(2, 0.5f, 2);
+    List<Vector3> spawnList;
 
     void Start()
     {
+        this.spawnList = new List<Vector3>();
         controller = GetComponent<PlayerController>();
-        controller.transform.position = spawn;
+        //controller.transform.position = spawn;
 
         camera = Camera.main;
         camera.transform.Rotate(new Vector3(90, 0, 0));
@@ -37,13 +39,26 @@ public class Player : MonoBehaviour
 
     }
 
+    public void setPossibleSpawn(List<Vector3> spawnList)
+    {
+        this.spawnList = spawnList;
+    }
+
+    public void newSpawn()
+    {
+        if (spawnList.Count > 0)
+        {
+            int r = Random.Range(0, spawnList.Count);
+            controller.transform.position = new Vector3(spawnList[r].x, spawnList[r].y + 0.5f, spawnList[r].z);
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.GetComponent(typeof(Enemy)) as Enemy)
         {
-            controller.transform.position = spawn;
-
             score = 0;
+            newSpawn();
             scoreText.text = score.ToString();
         }
         else if (collision.gameObject.GetComponent(typeof(Piece)) as Piece)

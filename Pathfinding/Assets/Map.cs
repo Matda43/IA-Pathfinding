@@ -31,6 +31,17 @@ public class Map : MonoBehaviour
         this.piece.newSpawn();
     }
 
+    public int getWidth()
+    {
+        return this.width;
+    }
+
+    public int getHeight()
+    {
+        return this.height;
+    }
+
+
     List<Vector3> generateSpawnList()
     {
         List<Vector3> possibleSpawn = new List<Vector3>();
