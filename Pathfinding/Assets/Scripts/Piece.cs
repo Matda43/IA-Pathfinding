@@ -11,6 +11,8 @@ public class Piece : MonoBehaviour
 {
     List<Vector3> spawnList;
     PieceController controller;
+    int cptmax = 10;
+    int cpt = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -24,12 +26,30 @@ public class Piece : MonoBehaviour
         this.spawnList = spawnList;
     }
 
+    private void Update()
+    {
+        if (cpt >= cptmax)
+        {
+            if (transform.position.y < -5)
+            {
+                newSpawn();
+            }
+            cpt = 0;
+        }
+        else
+        {
+            cpt++;
+        }
+    }
+
     public void newSpawn()
     {
         if (spawnList.Count > 0)
         {
             int r = Random.Range(0, spawnList.Count);
-            controller.transform.position = new Vector3(spawnList[r].x, spawnList[r].y + 1, spawnList[r].z);
+            Vector3 new_position = spawnList[r];
+            new_position.y = 3;
+            controller.transform.position = new_position;
         }
     }
 

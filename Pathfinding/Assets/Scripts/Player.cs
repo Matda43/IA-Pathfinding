@@ -10,16 +10,18 @@ public class Player : MonoBehaviour
     public TextMeshPro scoreText;
 
     int score;
-    float moveSpeed = 5;
+
+    [Range(1f, 6f)]
+    public float moveSpeed = 5;
 
     PlayerController controller;
     new Camera camera;
     //Vector3 spawn = new Vector3(2, 0.5f, 2);
-    List<Vector3> spawnList;
+    Dictionary<Vector3, Node> spawnList;
 
     void Start()
     {
-        this.spawnList = new List<Vector3>();
+        this.spawnList = new Dictionary<Vector3, Node>();
         controller = GetComponent<PlayerController>();
         //controller.transform.position = spawn;
 
@@ -39,7 +41,7 @@ public class Player : MonoBehaviour
 
     }
 
-    public void setPossibleSpawn(List<Vector3> spawnList)
+    public void setPossibleSpawn(Dictionary<Vector3, Node> spawnList)
     {
         this.spawnList = spawnList;
     }
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour
         if (spawnList.Count > 0)
         {
             int r = Random.Range(0, spawnList.Count);
-            controller.transform.position = new Vector3(spawnList[r].x, spawnList[r].y + 0.5f, spawnList[r].z);
+            controller.transform.position = new List<Vector3>(spawnList.Keys)[r]; //new Vector3(1,0.5f,1);
         }
     }
 

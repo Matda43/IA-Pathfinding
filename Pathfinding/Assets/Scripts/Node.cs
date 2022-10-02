@@ -6,14 +6,12 @@ using UnityEngine;
 public class Node
 {
     Vector3 position;
-    bool walkable;
     float distance;
     Node parent;
 
-    public Node(Vector3 position, bool walkable)
+    public Node(Vector3 position)
     {
         this.position = position;
-        this.walkable = walkable;
     }
 
     public void setParent(Node parent)
@@ -39,16 +37,6 @@ public class Node
     public float getDistance()
     {
         return distance;
-    }
-
-    public void setWalkable(bool walkable)
-    {
-        this.walkable = walkable;
-    }
-
-    public bool isWalkable()
-    {
-        return this.walkable;
     }
 
     public Vector3 getPosition()

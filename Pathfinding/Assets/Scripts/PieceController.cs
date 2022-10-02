@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PieceController : MonoBehaviour
 {
-    public float speed;
+    float speed = 100;
     Vector3 m_EulerAngleVelocity;
     new Rigidbody rigidbody;
 
