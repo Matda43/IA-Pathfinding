@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
 
     PlayerController controller;
     new Camera camera;
-    //Vector3 spawn = new Vector3(2, 0.5f, 2);
     Dictionary<Vector3, Node> spawnList;
 
     void Start()
@@ -60,12 +59,17 @@ public class Player : MonoBehaviour
         if (collision.gameObject.GetComponent(typeof(Enemy)) as Enemy)
         {
             score = 0;
+            scoreText.fontSize = 10;
             newSpawn();
             scoreText.text = score.ToString();
         }
         else if (collision.gameObject.GetComponent(typeof(Piece)) as Piece)
         {
-            score = (score + 1) % 10;
+            score++;
+            if(score == 10 || score == 1000)
+            {
+                scoreText.fontSize = scoreText.fontSize / 2;
+            }
             scoreText.text = score.ToString();
         }
     }
