@@ -127,6 +127,60 @@ public class Pathfinding
         return neighbours;
     }
 
+    public Dictionary<Node, float> getNeighboursAstar(Dictionary<Vector3, Node> ground, Vector3 position)
+    {
+
+        Vector3 x = new Vector3(1, 0, 0);
+        Vector3 z = new Vector3(0, 0, 1);
+
+        Dictionary<Vector3, float> adjacents = new Dictionary<Vector3, float>() {
+            { position - x - z, Mathf.Sqrt(2) },
+            { position - x + z, Mathf.Sqrt(2) },
+            { position + x - z, Mathf.Sqrt(2) },
+            { position + x + z, Mathf.Sqrt(2) },
+            { position - x, 1 },
+            { position + x, 1 },
+            { position - z, 1 },
+            { position + z, 1 }
+        };
+
+        if (!ground.ContainsKey(position - x))
+        {
+            adjacents.Remove(position - x + z);
+            adjacents.Remove(position - x - z);
+        }
+        if (!ground.ContainsKey(position + x))
+        {
+            adjacents.Remove(position + x + z);
+            adjacents.Remove(position + x - z);
+        }
+        if (!ground.ContainsKey(position - z))
+        {
+            adjacents.Remove(position - x - z);
+            adjacents.Remove(position + x - z);
+        }
+        if (!ground.ContainsKey(position + x))
+        {
+            adjacents.Remove(position - x + z);
+            adjacents.Remove(position + x + z);
+        }
+
+        Dictionary<Node, float> neighbours = new Dictionary<Node, float>();
+        foreach (var adjacent in adjacents)
+        {
+            if (ground.ContainsKey(adjacent.Key))
+            {
+                neighbours.Add(ground[adjacent.Key], adjacent.Value);
+            }
+        }
+        return neighbours;
+    }
+
+
+    float getDistance(Node n1, Node n2)
+    {
+        return Mathf.Max(Mathf.Abs(n2.getPosition().x - n1.getPosition().x), Mathf.Abs(n2.getPosition().z - n1.getPosition().z));
+    }
 
 
     public List<Vector3> astar(Dictionary<Vector3, Node> ground, Node startNode, Node targetNode)
@@ -149,12 +203,13 @@ public class Pathfinding
                 }
                 openList.Remove(current);
                 closeList.Add(current);
-                Dictionary<Node, float> neighbours = getNeighboursDijkstra(ground, current.getPosition());
+                Dictionary<Node, float> neighbours = getNeighboursAstar(ground, current.getPosition());
                 foreach (var neighbour in neighbours)
                 {
                     if (!openList.Contains(neighbour.Key) && !closeList.Contains(neighbour.Key))
                     {
-                        neighbour.Key.setDistance(current.getDistance() + neighbour.Value);
+                        //neighbour.setDistance(current.getDistance() + neighbour.Value);
+                        neighbour.Key.setDistance(getDistance(neighbour.Key, targetNode) + neighbour.Value);
                         neighbour.Key.setParent(current);
                         openList.Add(neighbour.Key);
                     }
