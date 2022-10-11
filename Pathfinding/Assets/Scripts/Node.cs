@@ -8,15 +8,27 @@ public class Node
     Vector3 position;
     float distance;
     Node parent;
+    float heuristic;
 
     public Node(Vector3 position)
     {
         this.position = position;
+        this.heuristic = 0;
     }
 
     public void setParent(Node parent)
     {
         this.parent = parent;
+    }
+
+    public void setHeuristic(float new_heuristic)
+    {
+        this.heuristic = new_heuristic;
+    }
+
+    public float getHeuristic()
+    {
+        return this.heuristic;
     }
 
     public Node getParent()

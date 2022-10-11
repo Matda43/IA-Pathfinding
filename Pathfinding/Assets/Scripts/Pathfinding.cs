@@ -29,7 +29,7 @@ public class Pathfinding
 
                 unexplored.Remove(current);
 
-                Dictionary<Node, float> neighbours = getNeighboursDijkstra(ground, current.getPosition());
+                Dictionary<Node, float> neighbours = getNeighbours(ground, current.getPosition());
                 foreach (var neighbour in neighbours)
                 {
                     if (unexplored.Contains(neighbour.Key))
@@ -78,7 +78,7 @@ public class Pathfinding
         }
     }
 
-    public Dictionary<Node, float> getNeighboursDijkstra(Dictionary<Vector3, Node> ground, Vector3 position)
+    public Dictionary<Node, float> getNeighbours(Dictionary<Vector3, Node> ground, Vector3 position)
     {
 
         Vector3 x = new Vector3(1, 0, 0);
@@ -96,55 +96,6 @@ public class Pathfinding
         };
 
         if(!ground.ContainsKey(position - x))
-        {
-            adjacents.Remove(position - x + z);
-            adjacents.Remove(position - x - z);
-        }
-        if (!ground.ContainsKey(position + x))
-        {
-            adjacents.Remove(position + x + z);
-            adjacents.Remove(position + x - z);
-        }
-        if (!ground.ContainsKey(position - z))
-        {
-            adjacents.Remove(position - x - z);
-            adjacents.Remove(position + x - z);
-        }
-        if (!ground.ContainsKey(position + x))
-        {
-            adjacents.Remove(position - x + z);
-            adjacents.Remove(position + x + z);
-        }
-
-        Dictionary<Node, float> neighbours = new Dictionary<Node, float>();
-        foreach (var adjacent in adjacents)
-        {
-            if (ground.ContainsKey(adjacent.Key))
-            {
-                neighbours.Add(ground[adjacent.Key], adjacent.Value);
-            }
-        }
-        return neighbours;
-    }
-
-    public Dictionary<Node, float> getNeighboursAstar(Dictionary<Vector3, Node> ground, Vector3 position)
-    {
-
-        Vector3 x = new Vector3(1, 0, 0);
-        Vector3 z = new Vector3(0, 0, 1);
-
-        Dictionary<Vector3, float> adjacents = new Dictionary<Vector3, float>() {
-            { position - x - z, Mathf.Sqrt(2) },
-            { position - x + z, Mathf.Sqrt(2) },
-            { position + x - z, Mathf.Sqrt(2) },
-            { position + x + z, Mathf.Sqrt(2) },
-            { position - x, 1 },
-            { position + x, 1 },
-            { position - z, 1 },
-            { position + z, 1 }
-        };
-
-        if (!ground.ContainsKey(position - x))
         {
             adjacents.Remove(position - x + z);
             adjacents.Remove(position - x - z);
@@ -195,7 +146,7 @@ public class Pathfinding
             openList.Add(startNode);
             while (openList.Count > 0)
             {
-                openList.Sort((x, y) => x.getDistance().CompareTo(y.getDistance()));
+                openList.Sort((x, y) => x.getHeuristic().CompareTo(y.getHeuristic()));
                 Node current = openList[0];
                 if (current == targetNode)
                 {
@@ -203,13 +154,13 @@ public class Pathfinding
                 }
                 openList.Remove(current);
                 closeList.Add(current);
-                Dictionary<Node, float> neighbours = getNeighboursAstar(ground, current.getPosition());
+                Dictionary<Node, float> neighbours = getNeighbours(ground, current.getPosition());
                 foreach (var neighbour in neighbours)
                 {
                     if (!openList.Contains(neighbour.Key) && !closeList.Contains(neighbour.Key))
                     {
-                        //neighbour.setDistance(current.getDistance() + neighbour.Value);
-                        neighbour.Key.setDistance(getDistance(neighbour.Key, targetNode) + neighbour.Value);
+                        neighbour.Key.setDistance(current.getDistance() + neighbour.Value);
+                        neighbour.Key.setHeuristic(neighbour.Key.getDistance() + getDistance(neighbour.Key, targetNode));
                         neighbour.Key.setParent(current);
                         openList.Add(neighbour.Key);
                     }
